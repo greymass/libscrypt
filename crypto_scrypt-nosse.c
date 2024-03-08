@@ -48,17 +48,20 @@ static void blockmix_salsa8(uint32_t *, uint32_t *, uint32_t *, size_t);
 static uint64_t integerify(void *, size_t);
 static void smix(uint8_t *, size_t, uint64_t, uint32_t *, uint32_t *);
 
-static void
-blkcpy(void * dest, void * src, size_t len)
-{
-	size_t * D = dest;
-	size_t * S = src;
-	size_t L = len / sizeof(size_t);
-	size_t i;
+// static void
+// blkcpy(void * dest, void * src, size_t len)
+// {
+// 	size_t * D = dest;
+// 	size_t * S = src;
+// 	size_t L = len / sizeof(size_t);
+// 	size_t i;
 
-	for (i = 0; i < L; i++)
-		D[i] = S[i];
-}
+// 	for (i = 0; i < L; i++)
+// 		D[i] = S[i];
+// }
+// Workaround for Apple compiler bug that breaks the above in -Os
+// See: https://github.com/technion/libscrypt/issues/60
+#define blkcpy(dest, src, len) memmove((dest), (src), (len))
 
 static void
 blkxor(void * dest, void * src, size_t len)
