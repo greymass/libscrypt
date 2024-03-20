@@ -36,10 +36,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "sha256.h"
-#include "sysendian.h"
+#include "sha256_legacy.h"
+#include "sysendian_legacy.h"
 
-#include "libscrypt.h"
+#include "libscrypt_legacy.h"
 
 static void blkcpy(void *, void *, size_t);
 static void blkxor(void *, void *, size_t);

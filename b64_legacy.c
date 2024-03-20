@@ -49,7 +49,7 @@
 #include <ctype.h>
 #include <sys/types.h>
 
-#include "b64.h"
+#include "b64_legacy.h"
 
 
 static const char Base64[] =

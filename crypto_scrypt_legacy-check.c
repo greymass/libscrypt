@@ -3,9 +3,9 @@
 #include <stdio.h>
 #include <math.h>
 
-#include "b64.h"
-#include "slowequals.h"
-#include "libscrypt.h"
+#include "b64_legacy.h"
+#include "slowequals_legacy.h"
+#include "libscrypt_legacy.h"
 
 #ifdef _WIN32
 /* On windows, strtok uses a thread-local static variable in strtok to

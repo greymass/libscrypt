@@ -3,8 +3,8 @@
 #include <stdio.h>
 #include <stdint.h>
 
-#include "b64.h"
-#include "libscrypt.h"
+#include "b64_legacy.h"
+#include "libscrypt_legacy.h"
 
 int libscrypt_hash(char *dst, const char *passphrase, uint32_t N, uint8_t r,
 		uint8_t p)
