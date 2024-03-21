@@ -14,7 +14,7 @@
 
 #define RNGDEV "/dev/urandom"
 
-int libscrypt_salt_gen(uint8_t *salt, size_t len)
+int libscrypt_salt_gen_legacy(uint8_t *salt, size_t len)
 {
 	unsigned char buf[len];
 	size_t data_read = 0;

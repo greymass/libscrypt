@@ -30,8 +30,8 @@
 #define _SYSENDIAN_H_
 
 
-/* If we don't have be64enc, the <sys/endian.h> we have isn't usable. */
-#if !HAVE_DECL_BE64ENC
+/* If we don't have be64enc_legacy, the <sys/endian.h> we have isn't usable. */
+#if !HAVE_DECL_be64enc_legacy
 #undef HAVE_SYS_ENDIAN_H
 #endif
 
@@ -49,7 +49,7 @@
 #endif
 
 static INLINE uint32_t
-be32dec(const void *pp)
+be32dec_legacy(const void *pp)
 {
 	const uint8_t *p = (uint8_t const *)pp;
 
@@ -58,7 +58,7 @@ be32dec(const void *pp)
 }
 
 static INLINE void
-be32enc(void *pp, uint32_t x)
+be32enc_legacy(void *pp, uint32_t x)
 {
 	uint8_t * p = (uint8_t *)pp;
 
@@ -69,7 +69,7 @@ be32enc(void *pp, uint32_t x)
 }
 
 static INLINE uint64_t
-be64dec(const void *pp)
+be64dec_legacy(const void *pp)
 {
 	const uint8_t *p = (uint8_t const *)pp;
 
@@ -80,7 +80,7 @@ be64dec(const void *pp)
 }
 
 static INLINE void
-be64enc(void *pp, uint64_t x)
+be64enc_legacy(void *pp, uint64_t x)
 {
 	uint8_t * p = (uint8_t *)pp;
 
@@ -95,7 +95,7 @@ be64enc(void *pp, uint64_t x)
 }
 
 static INLINE uint32_t
-le32dec(const void *pp)
+le32dec_legacy(const void *pp)
 {
 	const uint8_t *p = (uint8_t const *)pp;
 
@@ -104,7 +104,7 @@ le32dec(const void *pp)
 }
 
 static INLINE void
-le32enc(void *pp, uint32_t x)
+le32enc_legacy(void *pp, uint32_t x)
 {
 	uint8_t * p = (uint8_t *)pp;
 
@@ -115,7 +115,7 @@ le32enc(void *pp, uint32_t x)
 }
 
 static INLINE uint64_t
-le64dec(const void *pp)
+le64dec_legacy(const void *pp)
 {
 	const uint8_t *p = (uint8_t const *)pp;
 
@@ -126,7 +126,7 @@ le64dec(const void *pp)
 }
 
 static INLINE void
-le64enc(void *pp, uint64_t x)
+le64enc_legacy(void *pp, uint64_t x)
 {
 	uint8_t * p = (uint8_t *)pp;
 

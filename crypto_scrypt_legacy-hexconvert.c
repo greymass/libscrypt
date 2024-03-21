@@ -8,7 +8,7 @@
  * to assist with test harnesses only
  */
 
-int libscrypt_hexconvert(uint8_t *buf, size_t s, char *outbuf, size_t obs)
+int libscrypt_hexconvert_legacy(uint8_t *buf, size_t s, char *outbuf, size_t obs)
 {
 
         size_t i;

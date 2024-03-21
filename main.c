@@ -14,27 +14,27 @@
 
 int main()
 {
-	uint8_t hashbuf[SCRYPT_HASH_LEN];
+	uint8_t hashbuf[SCRYPT_HASH_LEN_LEGACY];
 	char outbuf[132];
-	char mcf[SCRYPT_MCF_LEN];
-	char mcf2[SCRYPT_MCF_LEN];
+	char mcf[SCRYPT_MCF_LEN_LEGACY];
+	char mcf2[SCRYPT_MCF_LEN_LEGACY];
 	char saltbuf[64];
 	int retval;
 	/**
-	 * libscrypt_scrypt(passwd, passwdlen, salt, saltlen, N, r, p, buf, buflen):
+	 * libscrypt_scrypt_legacy(passwd, passwdlen, salt, saltlen, N, r, p, buf, buflen):
 	 * password; duh
 	 * N: CPU AND RAM cost (first modifier)
 	 * r: RAM Cost
 	 * p: CPU cost (parallelisation)
 	 * In short, N is your main performance modifier. Values of r = 8, p = 1 are
 	 * standard unless you want to modify the CPU/RAM ratio.
-	int libscrypt_scrypt(const uint8_t *, size_t, const uint8_t *, size_t, uint64_t,
+	int libscrypt_scrypt_legacy(const uint8_t *, size_t, const uint8_t *, size_t, uint64_t,
     uint32_t, uint32_t, uint8_t *, size_t);
 */
 
 	printf("TEST ONE: Direct call to reference function with password 'password' and salt 'NaCL'\n");
 
-	retval = libscrypt_scrypt((uint8_t*)"password",strlen("password"), (uint8_t*)"NaCl", strlen("NaCl"), 1024, 8, 16, hashbuf, sizeof(hashbuf));
+	retval = libscrypt_scrypt_legacy((uint8_t*)"password",strlen("password"), (uint8_t*)"NaCl", strlen("NaCl"), 1024, 8, 16, hashbuf, sizeof(hashbuf));
 
 	if(retval != 0)
 	{
@@ -46,7 +46,7 @@ int main()
 
 	printf("TEST ONE and a half: Review errno on invalid input\n");
 
-	retval = libscrypt_scrypt((uint8_t*)"password",strlen("password"), (uint8_t*)"NaCl", strlen("NaCl"), 47, 1, 1, hashbuf, sizeof(hashbuf));
+	retval = libscrypt_scrypt_legacy((uint8_t*)"password",strlen("password"), (uint8_t*)"NaCl", strlen("NaCl"), 47, 1, 1, hashbuf, sizeof(hashbuf));
 
 	if(retval != -1)
 	{
@@ -60,7 +60,7 @@ int main()
 	* Returns 0 on fail, 1 on success
 	*/
 	printf("TEST TWO: Convert binary output to hex\n");
-	retval = libscrypt_hexconvert(hashbuf, sizeof(hashbuf), outbuf, sizeof(outbuf));
+	retval = libscrypt_hexconvert_legacy(hashbuf, sizeof(hashbuf), outbuf, sizeof(outbuf));
 	if(!retval)
 	{
 		printf("TEST TWO: FAILED\n");
@@ -85,7 +85,7 @@ int main()
 
 	/* Tests 4-6 repeat tests 1-3 with a different reference vector */
 
-	retval = libscrypt_scrypt((uint8_t*)"pleaseletmein",strlen("pleaseletmein"), (uint8_t*)"SodiumChloride", strlen("SodiumChloride"), 16384, 8, 1, hashbuf, sizeof(hashbuf));
+	retval = libscrypt_scrypt_legacy((uint8_t*)"pleaseletmein",strlen("pleaseletmein"), (uint8_t*)"SodiumChloride", strlen("SodiumChloride"), 16384, 8, 1, hashbuf, sizeof(hashbuf));
 
 	if(retval != 0)
 	{
@@ -99,7 +99,7 @@ int main()
 	* at least sizeof(hashbuf) * 2 + 1
 	*/
 	printf("TEST FIVE: Convert binary output to hex\n");
-	retval = libscrypt_hexconvert(hashbuf, sizeof(hashbuf), outbuf, sizeof(outbuf));
+	retval = libscrypt_hexconvert_legacy(hashbuf, sizeof(hashbuf), outbuf, sizeof(outbuf));
 	if(!retval)
 	{
 		printf("TEST FIVE: FAILED\n");
@@ -130,13 +130,13 @@ int main()
 
 	printf("TEST SEVEN: BASE64 encoding the salt and hash output\n");
 
-	retval = libscrypt_b64_encode(hashbuf, sizeof(hashbuf), outbuf, sizeof(outbuf));
+	retval = libscrypt_b64_encode_legacy(hashbuf, sizeof(hashbuf), outbuf, sizeof(outbuf));
 	if(retval == -1)
 	{
 		printf("TEST SEVEN FAILED\n");
 		exit(EXIT_FAILURE);
 	}
-	retval = libscrypt_b64_encode((unsigned char*)"SodiumChloride", strlen("SodiumChloride"), saltbuf, sizeof(saltbuf));
+	retval = libscrypt_b64_encode_legacy((unsigned char*)"SodiumChloride", strlen("SodiumChloride"), saltbuf, sizeof(saltbuf));
 	if(retval == -1)
 	{
 		printf("TEST SEVEN FAILED\n");
@@ -151,7 +151,7 @@ int main()
 	* int crypto_scrypt_mcf(uint32_t N, uint32_t r, uint32_t p, char *salt, char *hash, char *mcf); 
 	* Returns 0 on error, most likely reason is log2(N) not an integer.
 	*/
-	retval = libscrypt_mcf(16384, 8, 1, saltbuf, outbuf, mcf);
+	retval = libscrypt_mcf_legacy(16384, 8, 1, saltbuf, outbuf, mcf);
 	if(!retval)
 	{
 		printf("TEST EIGHT FAILED\n");
@@ -170,7 +170,7 @@ int main()
 	*/
 	
 	printf("TEST NINE: Password verify on given MCF\n");
-	retval = libscrypt_check(mcf, "pleaseletmein");
+	retval = libscrypt_check_legacy(mcf, "pleaseletmein");
 
 	if(retval < 0)
 	{
@@ -186,7 +186,7 @@ int main()
 	printf("TEST NINE: SUCCESSFUL,  tested pleaseletmein password\n");
 	
 	printf("TEST TEN: Password verify on same MCF, incorrect password\n");
-	retval = libscrypt_check(mcf2, "pleasefailme");
+	retval = libscrypt_check_legacy(mcf2, "pleasefailme");
 
 	if(retval < 0)
 	{
@@ -203,14 +203,14 @@ int main()
 
 	printf("TEST ELEVEN: Testing salt generator\n");
 
-	retval = libscrypt_salt_gen((uint8_t*)saltbuf, SCRYPT_SALT_LEN);
+	retval = libscrypt_salt_gen_legacy((uint8_t*)saltbuf, SCRYPT_SALT_LEN_LEGACY);
 	if(retval == -1)
 	{
 		printf("TEST ELEVEN (salt generate) FAILED\n");
 		exit(EXIT_FAILURE);
     }
 
-	retval = libscrypt_b64_encode((uint8_t*)saltbuf, SCRYPT_SALT_LEN, outbuf, sizeof(outbuf));
+	retval = libscrypt_b64_encode_legacy((uint8_t*)saltbuf, SCRYPT_SALT_LEN_LEGACY, outbuf, sizeof(outbuf));
 	if(retval == -1)
 	{
 		printf("TEST ELEVEN (b64 encode) FAILED\n");
@@ -220,7 +220,7 @@ int main()
 
 	printf("TEST TWELVE: Simple hash creation\n");
 
-	retval = libscrypt_hash(outbuf, "My cats's breath smells like cat food", SCRYPT_N, SCRYPT_r, SCRYPT_p);
+	retval = libscrypt_hash_legacy(outbuf, "My cats's breath smells like cat food", SCRYPT_N_LEGACY, SCRYPT_r_LEGACY, SCRYPT_p_LEGACY);
 	if(!retval)
 	{
 		printf("TEST TWELVE: FAILED, Failed to create simple hash\n");
@@ -230,7 +230,7 @@ int main()
 
 	printf("TEST THIRTEEN: Verify test twelve's hash\n");
 
-	retval = libscrypt_check(outbuf, "My cats's breath smells like cat food");
+	retval = libscrypt_check_legacy(outbuf, "My cats's breath smells like cat food");
 
 	if (retval != 1) {
 		printf("TEST THIRTEEN: FAILED, hash not verified\n");

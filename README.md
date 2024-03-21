@@ -16,28 +16,28 @@ Simple hashing interface
 
 The (reference) internal hashing function can be directly called as follows:
 
-    int libscrypt_scrypt(const uint8_t *passwd, size_t passwdlen,
+    int libscrypt_scrypt_legacy(const uint8_t *passwd, size_t passwdlen,
             const uint8_t *salt, size_t saltlen, uint64_t N, uint32_t r, 
             uint32_t p, /*@out@*/ uint8_t *buf, size_t buflen);
 
 Libscrypt's easier to use interface wraps this up to deal with the salt and produce BASE64 output as so:
 
-    int libscrypt_hash(char *dst, char *passphrase, uint32_t N, uint8_t r, uint8_t p);
+    int libscrypt_hash_legacy(char *dst, char *passphrase, uint32_t N, uint8_t r, uint8_t p);
 
 Sane constants have been created for N, r and p so you can create a hash like this:
 
-    libscrypt_hash(outbuf, "My cats's breath smells like cat food", SCRYPT_N, SCRYPT_r, SCRYPT_p);
+    libscrypt_hash_legacy(outbuf, "My cats's breath smells like cat food", SCRYPT_N_LEGACY, SCRYPT_r_LEGACY, SCRYPT_p_LEGACY);
 
 This function sets errno as required for any error conditions.
 
 Output stored in "outbuf" is stored in a standardised MCF form, which means includes the randomly created, 128 bit salt, all N, r and p values, and a BASE64 encoded version of the hash. The entire MCF can be stored in a database, and compared for use as below:
 
-    retval = libscrypt_check(mcf, "pleasefailme");
+    retval = libscrypt_check_legacy(mcf, "pleasefailme");
     retval < 0 error
     retval = 0 password incorrect
     retval > 0 pass
 
-mcf should be defined as at least SCRYPT_MCF_LEN in size.
+mcf should be defined as at least SCRYPT_MCF_LEN_LEGACY in size.
 
 Note that libscrypt_check needs to modify the mcf string and will not return it
 to the original state. Pass it a copy if you need to keep the original mcf.
@@ -61,7 +61,7 @@ Please compile and install with:
 
 BUGS
 ----
-SCRYPT_* constants are probably a little high for something like a Raspberry pi. Using '1' as SCRYPT_p is acceptable from a security and performance standpoint if needed. 
+SCRYPT_* constants are probably a little high for something like a Raspberry pi. Using '1' as SCRYPT_p_LEGACY is acceptable from a security and performance standpoint if needed. 
 Experiments were performed with using memset() to zero out passwords as they were checked. This often caused issues with calling applications where the password based have been passed as a const*. We highly recommend implementing your own zeroing function the moment this library is called.
 
 There is apparently an issue when used on Samsung (and perhaps Android in general) devices. See [this issue](https://github.com/technion/libscrypt/issues/39) for more information.
